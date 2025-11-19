@@ -18,27 +18,54 @@
       audio = new Audio('spaceWalk.mp3');
       audio.loop = true;
       audio.volume = 0.7;
+      console.log('Audio created:', audio);
+      audio.addEventListener('play', () => {
+        console.log('Audio playing');
+        if (filmreel) filmreel.style.animationPlayState = 'running';
+      });
+      audio.addEventListener('pause', () => {
+        console.log('Audio paused');
+        if (filmreel) filmreel.style.animationPlayState = 'paused';
+      });
       audio.addEventListener('ended', () => {
+        console.log('Audio ended');
         isPlaying = false;
-        filmreel.style.animationPlayState = 'paused';
+        if (filmreel) filmreel.style.animationPlayState = 'paused';
         updatePlayIcon();
       });
+      audio.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+      });
     }
-    if (isPlaying) {
-      audio.pause();
-      filmreel.style.animationPlayState = 'paused';
-    } else {
-      audio.play();
-      filmreel.style.animationPlayState = 'running';
+    
+    try {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error('Play error:', error);
+          });
+        }
+      }
+      isPlaying = !isPlaying;
+      updatePlayIcon();
+    } catch (error) {
+      console.error('Toggle music error:', error);
     }
-    isPlaying = !isPlaying;
-    updatePlayIcon();
   }
 
   if (filmreel) {
-    filmreel.addEventListener('click', toggleMusic);
+    filmreel.addEventListener('click', () => {
+      console.log('Filmreel clicked');
+      toggleMusic();
+    });
     filmreel.style.animationPlayState = 'paused';
     updatePlayIcon();
+    console.log('Filmreel initialized');
+  } else {
+    console.warn('Filmreel element not found');
   }
   const timeEl = $('#time');
   const modeEl = $('#mode');
