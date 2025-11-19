@@ -18,9 +18,15 @@
     if (!audio) {
       console.log('Creating audio element...');
       audio = new Audio();
+      
+      // 获取当前页面的基础 URL
+      const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+      const audioUrl = baseUrl + 'spaceWalk.mp3';
+      
       audio.crossOrigin = 'anonymous';
-      audio.src = 'spaceWalk.mp3';
+      audio.src = audioUrl;
       console.log('Audio src set to:', audio.src);
+      
       audio.loop = true;
       audio.volume = 0.7;
       
@@ -54,6 +60,9 @@
           console.error('Error code:', audio.error.code, 'message:', audio.error.message);
         }
       });
+      
+      // 预加载音频
+      audio.load();
     }
     
     try {
