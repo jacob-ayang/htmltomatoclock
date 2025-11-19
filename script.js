@@ -3,8 +3,15 @@
   const $ = sel => document.querySelector(sel);
   // 胶片音乐相关
   const filmreel = document.getElementById('filmreel');
+  const filmreelPlay = document.getElementById('filmreel-play');
   let audio = null;
   let isPlaying = false;
+
+  function updatePlayIcon() {
+    if (filmreelPlay) {
+      filmreelPlay.textContent = isPlaying ? '⏸' : '▶';
+    }
+  }
 
   function toggleMusic() {
     if (!audio) {
@@ -14,6 +21,7 @@
       audio.addEventListener('ended', () => {
         isPlaying = false;
         filmreel.style.animationPlayState = 'paused';
+        updatePlayIcon();
       });
     }
     if (isPlaying) {
@@ -24,11 +32,13 @@
       filmreel.style.animationPlayState = 'running';
     }
     isPlaying = !isPlaying;
+    updatePlayIcon();
   }
 
   if (filmreel) {
     filmreel.addEventListener('click', toggleMusic);
     filmreel.style.animationPlayState = 'paused';
+    updatePlayIcon();
   }
   const timeEl = $('#time');
   const modeEl = $('#mode');
