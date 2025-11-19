@@ -1,6 +1,35 @@
 // 简单的番茄钟实现（静态 JS）
 (() => {
   const $ = sel => document.querySelector(sel);
+  // 胶片音乐相关
+  const filmreel = document.getElementById('filmreel');
+  let audio = null;
+  let isPlaying = false;
+
+  function toggleMusic() {
+    if (!audio) {
+      audio = new Audio('spaceWalk.mp3');
+      audio.loop = true;
+      audio.volume = 0.7;
+      audio.addEventListener('ended', () => {
+        isPlaying = false;
+        filmreel.style.animationPlayState = 'paused';
+      });
+    }
+    if (isPlaying) {
+      audio.pause();
+      filmreel.style.animationPlayState = 'paused';
+    } else {
+      audio.play();
+      filmreel.style.animationPlayState = 'running';
+    }
+    isPlaying = !isPlaying;
+  }
+
+  if (filmreel) {
+    filmreel.addEventListener('click', toggleMusic);
+    filmreel.style.animationPlayState = 'paused';
+  }
   const timeEl = $('#time');
   const modeEl = $('#mode');
   const sessionEl = $('#session');
