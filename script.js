@@ -14,13 +14,27 @@
   }
 
   function toggleMusic() {
+    console.log('toggleMusic called, isPlaying:', isPlaying, 'audio:', audio);
     if (!audio) {
-      audio = new Audio('spaceWalk.mp3');
+      console.log('Creating audio element...');
+      audio = new Audio();
+      audio.crossOrigin = 'anonymous';
+      audio.src = 'spaceWalk.mp3';
+      console.log('Audio src set to:', audio.src);
       audio.loop = true;
       audio.volume = 0.7;
-      console.log('Audio created:', audio);
+      
+      audio.addEventListener('loadstart', () => {
+        console.log('Audio: loadstart event');
+      });
+      audio.addEventListener('loadedmetadata', () => {
+        console.log('Audio: loadedmetadata event, duration:', audio.duration);
+      });
+      audio.addEventListener('canplay', () => {
+        console.log('Audio: canplay event');
+      });
       audio.addEventListener('play', () => {
-        console.log('Audio playing');
+        console.log('Audio playing, duration:', audio.duration);
         if (filmreel) filmreel.style.animationPlayState = 'running';
       });
       audio.addEventListener('pause', () => {
@@ -34,23 +48,38 @@
         updatePlayIcon();
       });
       audio.addEventListener('error', (e) => {
-        console.error('Audio error:', e);
+        console.error('Audio error event:', e);
+        console.error('Audio error:', audio.error);
+        if (audio.error) {
+          console.error('Error code:', audio.error.code, 'message:', audio.error.message);
+        }
       });
     }
     
     try {
       if (isPlaying) {
+        console.log('Pausing audio...');
         audio.pause();
+        isPlaying = false;
       } else {
+        console.log('Playing audio...');
         const playPromise = audio.play();
+        console.log('Play promise:', playPromise);
         if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.error('Play error:', error);
-          });
+          playPromise
+            .then(() => {
+              console.log('Audio play succeeded');
+              isPlaying = true;
+              updatePlayIcon();
+            })
+            .catch((error) => {
+              console.error('Play error:', error);
+            });
+        } else {
+          isPlaying = true;
+          updatePlayIcon();
         }
       }
-      isPlaying = !isPlaying;
-      updatePlayIcon();
     } catch (error) {
       console.error('Toggle music error:', error);
     }
@@ -58,7 +87,7 @@
 
   if (filmreel) {
     filmreel.addEventListener('click', () => {
-      console.log('Filmreel clicked');
+      console.log('Filmreel clicked!');
       toggleMusic();
     });
     filmreel.style.animationPlayState = 'paused';
