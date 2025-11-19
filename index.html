@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>番茄钟</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jpeg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <h1>阿钖の番茄钟</h1>
+
+    <section class="timer-card" aria-live="polite">
+      <div class="mode-info">
+        <span id="mode">工作</span>
+        <span id="session">第 0 / 4 回合</span>
+      </div>
+
+      <div class="progress-wrap">
+        <svg id="progress-svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" stroke="#222b" stroke-width="12" fill="none" />
+          <circle id="progress-ring" cx="80" cy="80" r="70" stroke="#ff6b6b" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="0" />
+        </svg>
+        <div class="time-display" id="time">25:00</div>
+      </div>
+
+      <div class="controls">
+        <button id="start">开始</button>
+        <button id="pause">暂停</button>
+        <button id="reset">重置</button>
+      </div>
+    </section>
+
+    <section class="settings">
+      <h2>设置</h2>
+      <label>工作: <input id="work-min" type="number" min="1" max="180" value="25"> 分钟</label>
+      <label>短休息: <input id="short-min" type="number" min="1" max="60" value="5"> 分钟</label>
+      <label>长休息: <input id="long-min" type="number" min="1" max="60" value="15"> 分钟</label>
+      <label>每轮次数: <input id="rounds" type="number" min="1" max="10" value="4"></label>
+    </section>
+
+    <footer class="help">
+      <p>快捷键：<strong>空格</strong> 开始/暂停，<strong>R</strong> 重置</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
